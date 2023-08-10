@@ -441,11 +441,15 @@ class AttachDecoratorData(BaseModel):
             verkey = bytes_to_b58(b64_to_bytes(protected["jwk"]["x"], urlsafe=True))
             encoded_pk = DIDKey.from_did(protected["jwk"]["kid"]).public_key_b58
             verkey_to_check.append(encoded_pk)
+            print("Going to verify signature using verkey: ", verkey)
             if not await wallet.verify_message(sign_input, b_sig, verkey, ED25519):
+                print("First verification failed using verkey: ", verkey)
                 return False
             if not await wallet.verify_message(sign_input, b_sig, encoded_pk, ED25519):
+                print("Second verification failed using verkey: ", encoded_pk)
                 return False
         if signer_verkey and signer_verkey not in verkey_to_check:
+            print("Signer verkey does not it in verkey_to_check:", signer_verkey, verkey_to_check)
             return False
         return True
 

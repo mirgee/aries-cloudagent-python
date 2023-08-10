@@ -945,6 +945,7 @@ class DIDXManager(BaseConnectionManager):
         if not await attached.data.verify(wallet, invi_key):
             raise DIDXManagerError("DID doc attachment signature failed verification")
 
+        print("Going to deserialize DDO: ", signed_diddoc_bytes.decode())
         return LegacyDIDDoc.deserialize(json.loads(signed_diddoc_bytes.decode()))
 
     async def get_resolved_did_document(self, qualified_did: str) -> ResolvedDocument:
